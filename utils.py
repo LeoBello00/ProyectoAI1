@@ -1,13 +1,13 @@
-def print_red(text, end="\n"):
-    print(f"\033[91m{text}\033[00m", end=end)
+def return_text_red(text, end="\n"):
+    return f"\033[91m{text}\033[00m"
 
-def print_blue(text, end="\n"):
-    print(f"\033[94m{text}\033[00m", end=end)
+def return_text_blue(text, end="\n"):
+    return f"\033[94m{text}\033[00m"
 
-def print_colour(text, colour, end="\n"):
+def return_text_colour(text, colour, end="\n"):
     if colour == 1:
-        print_red(text)
+        return return_text_red(text, end=end)
     elif colour == -1:
-        print_blue(text)
+        return_text_blue(text, end=end)
     else:
-        print(text)
+        return text
