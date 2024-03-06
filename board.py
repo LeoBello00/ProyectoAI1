@@ -7,13 +7,13 @@ class Board():
         self.grid = []
         for j in range(size-1):
             for i in range(size-1):
-                self.grid.append(["black", (i, j), (i+1, j)])
-                self.grid.append(["black", (i, j+1), (i+1, j+1)])
+                self.grid.append([0, (i, j), (i+1, j)])
+                self.grid.append([0, (i, j+1), (i+1, j+1)])
     
     def __str__(self):
         for line in self.grid:
             for edge in line:
-                print_colour("___", edge[0])
+                print_colour("___", edge[0], end="")
             
     
     def is_full(self):
