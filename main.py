@@ -10,7 +10,7 @@ def play_game(strategy1, strategy2):
         print(f"Player 1: {move}")
         board.make_move(move, 1)
         print(board)
-
+        Human().next_move(board)
         if board.is_full():
             if board.get_score() == 0:
                 print("It's a draw!")
