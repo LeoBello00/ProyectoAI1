@@ -16,24 +16,51 @@ class Board():
         
 
     def __str__(self):
+        mtx_str = [["0"]*(3*(self.size+1)+1) for _ in range(2*self.size + 1)]
+        for idx_line, line in enumerate(mtx_str):
+            if idx_line == 0:
+                for idx_chr, chr in enumerate(line):
+                    if (1+idx_chr) % 4 == 1:
+                        line[idx_chr] = " "
+            elif idx_line != 0 and idx_line % 2 == 1:
+                for idx_chr, chr in enumerate(line):
+                    if (idx_chr) % 4 != 0:
+                        line[idx_chr] = " "
+
+        # board_str = ""
+        # line0 = []
+        # lines_txt = line0 + [[] for _ in range(2*self.size + 1)]
+        # for edge in self.grid:
+        #     idx_line = edge[]
+        #     if num % 2 == 0:
+        #         ...
+        #     else:
+        #         ...
+
+        # line0 = [" "]
+        # for line in range(self.size):
+        #     line0.append(return_text_colour("_"*3, self.grid[i][0], end=" "))
+        #     # for edge in self.grid:
+        #     #     if edge[2][1] - edge[1][1] == 1: #it's an horizontal edge
+        #     #         line0.append(return_text_colour("|", edge[0], end=" "))
+        #     # colour0 = edge[0]
+        # board_str += "".join(line0) + "\n"
+
+        # for i in range(2*(self.size+1)+2):
+        #     for j in range(self.size):
+        #         line1.append([
+        #             [return_text_colour("|", self.grid[1 + i//2][0], end="") +" "*3]
+        #             for j in range(self.size)].flatten()
+
+        #         )
+        #     line1 = []
+        #     line2 = []
+        #     board_str += "".join(["|" + " "*3 for _ in range(self.size)] + ["|"]) + "\n"
+        #     board_str += "".join(["|" + "_"*3 for _ in range(self.size)] + ["|"]) + "\n"
+        for line in mtx_str:
+            print(line)
         board_str = ""
-        for j in range(self.size * 2 + 1):
-            for i in range(self.size):
-                if i % 2 == 0 and j % 2 == 0:
-                    board_str += "."
-                    board_str += "____"  # Ligne horizontale
-                elif i % 2 == 0:
-                    idx = (i // 2) + (j // 2) * (self.size - 1)
-                    board_str += "|" + return_text_colour("    ", self.grid[idx][0])  # Espace entre les lignes verticales
-                elif j % 2 == 0:
-                    idx = (i // 2) + (j // 2) * self.size
-                    board_str += "."
-                    board_str += return_text_colour("____", self.grid[idx][0])  # Ligne horizontale
-                else:
-                    idx = (i // 2) + (j // 2) * (self.size - 1)
-                    board_str += "|" + return_text_colour("    ", self.grid[idx][0])  # Espace entre les lignes horizontales
-            board_str += "|\n"
-        return board_str + str(self.grid)
+        return board_str
     
     def is_full(self):
         pass
@@ -73,3 +100,11 @@ class Board():
     
     def make_move(self, move, player):
         pass
+
+    def get_edge_from_location(self, location1, location2):
+        for edge in self.grid:
+            if edge[1] == location1 and edge[2] == location2:
+                return edge
+
+    def get_colour_from_location(self, location1, location2):
+        return self.get_edge_from_location(location1, location2)[0]
