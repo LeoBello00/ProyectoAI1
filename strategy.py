@@ -11,19 +11,12 @@ class Strategy():
         pass
 
     def verifyLine(self,board,line):
-        if not line.isdigit():
-            print('Invalid input. Please enter a number.')
-            return False
-        else:
-            if len(line) == 4:
-                result = (x[0] for x in board.grid if x[1] == (int(line[0]), int(line[1])) and x[2] == (int(line[2]), int(line[3])))
-                if result == 0:
-                    return True
-                else:
-                    return False
-            else:
-                print('Invalid input. Please enter 4 numbers.')
-                return False
+        freeLines = self.getFreeLines(board)
+        print(freeLines)
+        for lineTmp in freeLines:
+            if (lineTmp[1] == line[0] and lineTmp[2] == line[1]):
+                return True
+        return False
     
     def getFreeLines(self,board):
         freeLines = []
@@ -54,7 +47,8 @@ class Human(Strategy):
 class Random(Strategy):
     def next_move(self, board):
         freeLines = self.getFreeLines(board)
-        return random.choice(freeLines)
+        randomChoice = random.randint(0, len(freeLines) - 1)
+        return freeLines[randomChoice]
         
 
 class Greedy(Strategy):

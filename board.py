@@ -38,7 +38,37 @@ class Board():
     def is_full(self):
         pass
 
-    def get_score(self):
+    def get_score(self,lastPlayer):
+        size = self.size
+        winningLines = []
+        counter = 0
+        counterTaken = 0
+        score = 0
+        for line in self.grid:
+            if line[0] != 0:
+                winningLines.append(line)
+        for line in winningLines:
+            if(line[0] != lastPlayer):
+                counterTaken += 1
+            for line2 in winningLines:
+                if line != line2:
+                    if line2[0] != lastPlayer:
+                        counterTaken += 1
+                    if line[1] == line2[1]:
+                        if (line2[2][0] == line2[1][0] + 1 and line2[2][1] == line2[1][1]):
+                            counter += 1
+                    elif (line2[1][0] == line[1][0] + 1 )and (line2[1][1] == line[1][1]) and (line2[2][0] == line[2][0]+1) and (line2[2][1] == line[2][1]):
+                        counter += 1
+                    elif line[2] == line2[1]:
+                        if (line2[2][0] == line2[1][0] + 1 and line2[2][1] == line2[1][1]):
+                            counter += 1
+            if counter == 3:
+                if(counterTaken != 4):
+                    score += lastPlayer
+                else:
+                    score -= lastPlayer
+
+             
         return 1
     
     def make_move(self, move, player):
