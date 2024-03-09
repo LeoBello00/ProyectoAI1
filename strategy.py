@@ -77,95 +77,33 @@ class AlphaBeta(Strategy):
 
     def next_move(self, board):
         freeLines = self.getFreeLines(board)
+        possibileEnd = False
+        if len(freeLines) <= self.depth:
+            possibileEnd = True
         if self.player == 1:
-            return self.alpha_beta(board, self.depth, -100000, 100000, True, freeLines)[1]
+            results = self.alpha_beta(board, self.depth, -100000, 100000, True, freeLines)
         else:
-            return self.alpha_beta(board, self.depth, -100000, 100000, False, freeLines)[1]
-    
-    def next_move1(self, board):
-        free_lines = self.getFreeLines(board)
-
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Create a list of future objects representing the evaluations of each move
-            futures = [executor.submit(self.alpha_beta_worker, board, self.depth, -float('inf'), float('inf'), False, line) for line in free_lines]
-
-            # Gather the results
-            results = [future.result() for future in concurrent.futures.as_completed(futures)]
-
-        # Find the best move based on the results
-        print(results)
-        if(len(results) == 1):
-            return results[0][1]
-        best_score = min(results[1:])[0]
-        for score, line in results[1:]:
-            if score == best_score:
-                best_line = line
-        return best_line
-    
-    def alpha_beta_worker(self, board, depth, alpha, beta, maximizing_player, line):
-        chosen_line = None
-
-        if depth == 0 or board.is_full():
-            return board.get_score(0), chosen_line
-
-        if maximizing_player:
-            max_eval = -float('inf')
-            score_tmp = [board.get_score_old(), board.get_score_old()]
-
-            board_tmp = deepcopy(board)
-            board_tmp.make_move(line, 1)
-            score_tmp[0] = board_tmp.get_score1(line, 1)
-
-            if score_tmp[0] == score_tmp[1]:
-                if depth != 1:
-                    eval = self.alpha_beta(board_tmp, depth - 1, alpha, beta, False, self.getFreeLines(board_tmp))[0]
-                else:
-                    eval = score_tmp[0]
+            results = self.alpha_beta(board, self.depth, -100000, 100000, False, freeLines)
+        text_file = open("AlphaBeta.txt", "w")
+        txt = results[2]
+        txt += "\nFinal decision:\nChosenLine " + str(results[1]) + "\n" + "Eval " + str(results[0]) + "\n"
+        if possibileEnd:
+            txt += "Possibile end of game:\n"
+            if results[0] == 0:
+                txt += "It's a draw!\n"
+            elif results[0] > 0:
+                txt += "Player 2 wins!\n"
             else:
-                score_tmp[1] = score_tmp[0]
-                eval = self.alpha_beta(board_tmp, depth - 1, alpha, beta, True, self.getFreeLines(board_tmp))[0]
-
-            if eval > max_eval:
-                chosen_line = line
-                max_eval = eval
-
-            if alpha <= eval:
-                alpha = eval
-                if beta <= alpha:
-                    return max_eval, chosen_line
-
-        else:
-            min_eval = float('inf')
-            score_tmp = [board.get_score_old(), board.get_score_old()]
-
-            board_tmp = deepcopy(board)
-            board_tmp.make_move(line, -1)
-            score_tmp[0] = board_tmp.get_score1(line, -1)
-
-            if score_tmp[0] == score_tmp[1]:
-                if depth != 1:
-                    eval = self.alpha_beta(board_tmp, depth - 1, alpha, beta, True, self.getFreeLines(board_tmp))[0]
-                else:
-                    eval = score_tmp[0]
-            else:
-                score_tmp[1] = score_tmp[0]
-                eval = self.alpha_beta(board_tmp, depth - 1, alpha, beta, False, self.getFreeLines(board_tmp))[0]
-
-            if eval < min_eval:
-                chosen_line = line
-                min_eval = eval
-            if beta >= eval:
-                beta = eval
-                if beta <= alpha:
-                    return min_eval, chosen_line
-
-        return max_eval if maximizing_player else min_eval, chosen_line
+                txt += "Player 1 wins!\n"
+        text_file.write(txt)
+        text_file.close()
+        return results[1]
     
     def alpha_beta(self, board, depth, alpha, beta, maximizingPlayer, freeLines):
         chosenLine = None
-
+        log = ""
         if depth == 0 or board.is_full():
-            return  board.get_score(0), chosenLine
+            return  board.get_score(0), chosenLine, ""
         if maximizingPlayer:         
             maxEval = -100000
             scoreTmp = [board.get_score_old(),board.get_score_old()]
@@ -177,7 +115,9 @@ class AlphaBeta(Strategy):
                     if depth != 1:
                         #indexTmp = freeLines.index(line)
                         #freeLineTmp = freeLines.pop(indexTmp)
-                        eval = self.alpha_beta(boardTmp, depth-1, alpha, beta, False, self.getFreeLines(boardTmp))[0]
+                        results = self.alpha_beta(boardTmp, depth-1, alpha, beta, False, self.getFreeLines(boardTmp))
+                        eval = results[0]
+                        log += results[2]
                         #freeLines.insert(indexTmp,freeLineTmp)
                     else:
                         eval = scoreTmp[0]
@@ -185,18 +125,22 @@ class AlphaBeta(Strategy):
                     scoreTmp[1] = scoreTmp[0]
                     #indexTmp = freeLines.index(line)
                     #freeLineTmp = freeLines.pop(indexTmp)
-                    eval = self.alpha_beta(boardTmp, depth - 1, alpha, beta, True, self.getFreeLines(boardTmp))[0]
+                    results = self.alpha_beta(boardTmp, depth - 1, alpha, beta, True, self.getFreeLines(boardTmp))
+                    eval = results[0]
+                    log += results[2]
                     #freeLines.insert(indexTmp,freeLineTmp)
                     #sprint("eval ",eval)
                 if eval > maxEval:
                     #print("Maxeval ",eval, " ChosenLine ",line)
+                    log += "\nMaxeval " + str(eval) + " ChosenLine " + str(line) + "\n"
+                    #log += boardTmp.__str__()
                     chosenLine = line
                     maxEval = eval
                 if alpha <= eval:
                     alpha = eval
                     if beta <= alpha:
                         break
-            return maxEval, chosenLine
+            return maxEval, chosenLine , log
         else:
             minEval = 100000
             scoreTmp = [board.get_score_old(),board.get_score_old()]
@@ -208,7 +152,9 @@ class AlphaBeta(Strategy):
                     if depth != 1:
                         #indexTmp = freeLines.index(line)
                         #freeLineTmp = freeLines.pop(indexTmp)
-                        eval = self.alpha_beta(boardTmp, depth-1, alpha, beta, True, self.getFreeLines(boardTmp))[0]
+                        results = self.alpha_beta(boardTmp, depth-1, alpha, beta, True, self.getFreeLines(boardTmp))
+                        eval = results[0]
+                        log += results[2]
                         #freeLines.insert(indexTmp,freeLineTmp)
                     else:
                         eval = scoreTmp[0]
@@ -216,9 +162,13 @@ class AlphaBeta(Strategy):
                     scoreTmp[1] = scoreTmp[0]
                     #indexTmp = freeLines.index(line)
                     #freeLineTmp = freeLines.pop(indexTmp)
-                    eval = self.alpha_beta(boardTmp, depth -1, alpha, beta, False, self.getFreeLines(boardTmp))[0]
+                    results = self.alpha_beta(boardTmp, depth -1, alpha, beta, False, self.getFreeLines(boardTmp))
+                    eval = results[0]
+                    log += results[2]
                     #freeLines.insert(indexTmp,freeLineTmp)
                 if eval < minEval:
+                    log += "\nMineval " + str(eval) + " ChosenLine " + str(line) + "\n"
+                    #log += boardTmp.__str__()
                     #print("Mineval ",eval, " ChosenLine ",line)
                     chosenLine = line
                     minEval = eval
@@ -226,7 +176,7 @@ class AlphaBeta(Strategy):
                     beta = eval
                     if beta <= alpha:
                         break
-            return minEval,chosenLine
+            return minEval,chosenLine , log
 
 class MinMax(Strategy):
     def __init__(self, depth):

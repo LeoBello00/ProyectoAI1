@@ -64,7 +64,7 @@ def play_game(strategy1, strategy2):
 
 if __name__ == '__main__':
     board = Board()
-    strategy1 = AlphaBeta(6, -1)
-    strategy2 = AlphaBeta(3,1)
+    strategy1 = Human()
+    strategy2 = AlphaBeta(2, 1)
 
     play_game(strategy1, strategy2)
