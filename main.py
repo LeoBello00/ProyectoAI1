@@ -17,18 +17,31 @@ def check_winner(board):
 def play_game(strategy1, strategy2):
     # Start the game
     print(f"{strategy1.__class__.__name__} VS {strategy2.__class__.__name__}")
+    score = 0
+    newScore = 0
     while not board.is_full():
         # Player 1
-        move = strategy1.next_move(board)
-        print(f"Player 1: {move}")
-        board.make_move(move, -1)
-        print(board.get_score(-1))
+        if newScore == score:
+            score = newScore
+            move = strategy1.next_move(board)
+            board.make_move(move, -1)
+            newScore = board.get_score1(move, -1)
+            print(newScore)
+            print(board)
+        else: 
+            score = newScore
         if check_winner(board):
             return
-        chosenMove =Human().next_move(board)
-        print(f"Player 2: {chosenMove}")
-        board.make_move(chosenMove, 1)
-        print(board.get_score(1))
+        if newScore == score:
+            score = newScore
+            chosenMove =strategy2.next_move(board)
+            board.make_move(chosenMove, 1)
+            newScore = board.get_score1(chosenMove,1)
+            print(newScore)
+            print(board)
+        else:
+            score = newScore
+        
         if check_winner(board):
             return
 
@@ -51,7 +64,7 @@ def play_game(strategy1, strategy2):
 
 if __name__ == '__main__':
     board = Board()
-    strategy1 = AlphaBeta(5)
-    strategy2 = Random()
+    strategy1 = AlphaBeta(6, -1)
+    strategy2 = AlphaBeta(3,1)
 
     play_game(strategy1, strategy2)

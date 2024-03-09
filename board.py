@@ -46,7 +46,63 @@ class Board():
                 edge[0] = colour
     
     def is_full(self):
-        pass
+        if self.getFreeLines(self) == []:
+            return True
+
+    def getFreeLines(self,board):
+        freeLines = []
+        for line in board.grid:
+            if line[0] == 0:
+                freeLines.append(line)
+        return freeLines
+
+    def get_score_old(self):
+        return self.score
+
+    def get_score1(self,line, lastPlayer):
+        if line[1][0] == line[2][0]:
+            lineHdown = self.get_edge_from_location((line[1][0] + 1,line[1][1]), (line[2][0] + 1,line[2][1]))
+            lineHup = self.get_edge_from_location((line[1][0] - 1,line[1][1]), (line[2][0] - 1,line[2][1]))
+            if(lineHup != []):
+                if lineHup[0] != 0:                    
+                    lineVleft = self.get_edge_from_location((line[1][0]-1, line[1][1]), (line[1][0],line[1][1]))
+                    if lineVleft != []:
+                        if lineVleft[0] != 0:
+                            lineVright = self.get_edge_from_location((line[2][0] - 1,line[2][1]), line[2])
+                            if lineVright != []:
+                                if lineVright[0] != 0:
+                                    self.score += lastPlayer
+            if lineHdown != []:
+                if lineHdown[0] != 0: 
+                    lineVleft = self.get_edge_from_location(line[1], (line[1][0] + 1,line[1][1])) 
+                    if lineVleft != []:   
+                        if lineVleft[0] != 0:
+                            lineVright = self.get_edge_from_location(line[2], (line[2][0] + 1,line[2][1]))
+                            if lineVright != []:
+                                if lineVright[0] != 0:
+                                    self.score += lastPlayer   
+        else:
+            lineVleft = self.get_edge_from_location((line[1][0],line[1][1] - 1), (line[2][0],line[2][1] - 1))
+            lineVright = self.get_edge_from_location((line[1][0],line[1][1] + 1), (line[2][0],line[2][1] + 1))
+            if lineVleft != []:
+                if lineVleft[0] != 0:
+                    lineHup = self.get_edge_from_location((line[1][0],line[1][1]-1), line[1])
+                    if lineHup != []:
+                        if lineHup[0] != 0:
+                            lineHdown = self.get_edge_from_location((line[2][0],line[2][1] - 1), line[2])
+                            if lineHdown != []:
+                                if lineHdown[0] != 0:
+                                    self.score += lastPlayer
+            if lineVright != []:
+                if lineVright[0] != 0:
+                    lineHup = self.get_edge_from_location(line[1], (line[1][0],line[1][1] + 1))
+                    if lineHup != []:
+                        if lineHup[0] != 0:
+                            lineHdown = self.get_edge_from_location(line[2], (line[2][0],line[2][1] + 1))
+                            if lineHdown != []:
+                                if lineHdown[0] != 0:
+                                    self.score += lastPlayer       
+        return self.score
 
     def get_score(self,lastPlayer):
         size = self.size
@@ -55,8 +111,6 @@ class Board():
         counterTaken = 0
         score = 0
         linesToChange = []
-        if lastPlayer == 0:
-            lastPlayer = -1
         for line in self.grid:
             if line[0] != 0:
                 winningLines.append(line)
@@ -87,15 +141,17 @@ class Board():
                             linesToChange.append(line2)
             if counter == 4:
                 if(counterTaken != 4):
-                    tmp = 0
-                    for line in linesToChange:
-                        if line[3] == 0:
-                            line[0] = lastPlayer
-                            line[3] = 1
-                            tmp += 1
+                    tmp = 0              
                     if(line[3] == 0):
                         tmp += 1
+                        line[3] = 1
+                    for t in linesToChange:
+                        if t[3] == 0:
+                            t[0] = lastPlayer
+                            t[3] = 1
+                            tmp += 1
                     if tmp > 0:
+                        #print("Player ",lastPlayer," scored ",tmp)
                         score += lastPlayer
             
             linesToChange = []
@@ -109,10 +165,15 @@ class Board():
         self.get_edge_from_location(move[1], move[2])[0] = player
         pass
 
+    def unmake_move(self, move):
+        self.get_edge_from_location(move[1], move[2])[0] = 0
+        pass
+
     def get_edge_from_location(self, location1, location2):
         for edge in self.grid:
             if edge[1] == location1 and edge[2] == location2:
                 return edge
+        return []
 
     def get_colour_from_location(self, location1, location2):
         return (self.get_edge_from_location(location1, location2))[0]
