@@ -626,6 +626,8 @@ The evaluation function is based on the get_score1 method of the board object.
 Pruning is performed using the alpha-beta values to discard unnecessary branches in the search tree.
 The results and additional information are logged into the “AlphaBeta.txt” file.</p>
 <p>at every iteration it adds a line to the log that it’s printed at the end of the research and shows every intermediate result and at the end specifies the chosen move with its maximum/minimum results and specifies if a player can win and with what score</p>
+<p>After analyzing it we found out that the best depth to use against a human is either 3 or 2, depending on the type of player, because more depth implies more sensitivity to the next move and thus everytime that the other player doesn’t play the move predicted by the algorythm, it struggles because the algorythm aims to maximize its score and thus it doesn’t aim to maximizing its probabilities of winning, and the player wins easily.
+More depth is always better if the two players are two alphabeta algorythms because the one with more depth can predict with 100 percent accuracy the next N moves of the other</p>
 </section>
 
     <script type="text/x-thebe-config">
