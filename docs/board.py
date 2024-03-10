@@ -1,4 +1,4 @@
-from docs.utils import return_text_colour
+from utils import return_text_colour
 
 class Board():
     def __init__(self, size=3):

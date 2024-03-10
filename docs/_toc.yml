@@ -4,8 +4,8 @@
 format: jb-book
 root: intro.md
 chapters:
-- file: strategy.py
+- file: strategy.ipynb
 - file: AlphaBeta.txt
-- file: board.py
+- file: board.ipynb
 - file: demo.ipynb
-- file: main.py
+- file: main.ipynb

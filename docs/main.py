@@ -1,5 +1,5 @@
-from docs.board import Board
-from docs.strategy import Human, Random, Greedy, MinMax, AlphaBeta
+from board import Board
+from strategy import Human, Random, Greedy, MinMax, AlphaBeta
 
 def check_winner(board):
     if board.is_full():
