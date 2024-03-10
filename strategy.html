@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; My sample book</title>
+    <title>Strategies &#8212; My sample book</title>
   
   
   
@@ -68,7 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'strategy';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="board.html" />
+    <link rel="next" title="Board" href="board.html" />
     <link rel="prev" title="Welcome to your Jupyter Book" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -184,7 +184,10 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Demo</a></li>
+</ul>
+
     </div>
 </nav></div>
     </div>
@@ -355,9 +358,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -368,19 +369,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Strategies</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -390,7 +383,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="strategies">
+<h1>Strategies<a class="headerlink" href="#strategies" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">random</span>
@@ -426,6 +421,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Strategies is how the game will be played, we created different ones:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Human</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>    
@@ -450,6 +446,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Here is the simplest one where the user can play the game, by deciding where to put his lines at every turn</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Random</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
@@ -464,6 +461,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Random is just used to test and plays a random free line at every turn, to test the algorithms efficiencies</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Greedy</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
@@ -485,6 +483,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Greedy is a type of algorithm that puts a line wherever it can score a point, if it can t score a point it just put a line in the first space avaiable</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AlphaBeta</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
@@ -597,6 +596,34 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Finally we have alpha beta algorythm</p>
+<p>Here’s a breakdown of the main components of the algorithm:</p>
+<p>Initialization:
+The AlphaBeta class is initialized with a specified depth and player.
+depth: The depth of the search tree, determining how many moves ahead the algorithm explores.
+player: The current player (1 or -1).
+next_move Method:
+Takes the current game board as input and calculates the next move for the player using the Alpha-Beta algorithm.
+It checks if the number of free lines on the board is less than or equal to the specified depth. If true, it sets possibileEnd to True.
+Calls the alpha_beta function to find the best move.
+Writes the results to a file named “AlphaBeta.txt” and returns the chosen move.
+alpha_beta Method:
+Recursive function implementing the Alpha-Beta algorithm.
+Parameters:
+board: The current state of the game board.
+depth: The remaining depth to explore in the game tree.
+alpha and beta: Parameters for pruning the search space.
+maximizingPlayer: A boolean indicating whether the current player is maximizing.
+freeLines: The available lines to make a move.
+Returns a tuple containing the evaluation score of the current move, the chosen line, and a log string.
+Details:
+The algorithm uses a depth-first search approach to explore possible moves.
+It utilizes the getFreeLines and make_move methods on the board object.
+The evaluation function is based on the get_score1 method of the board object.
+Pruning is performed using the alpha-beta values to discard unnecessary branches in the search tree.
+The results and additional information are logged into the “AlphaBeta.txt” file.</p>
+<p>at every iteration it adds a line to the log that it’s printed at the end of the research and shows every intermediate result and at the end specifies the chosen move with its maximum/minimum results and specifies if a player can win and with what score</p>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -642,7 +669,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">Board</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -653,20 +680,7 @@ document.write(`
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-  </nav></div>
-
-</div></div>
+                <div class="bd-sidebar-secondary bd-toc"></div>
               
             
           </div>
