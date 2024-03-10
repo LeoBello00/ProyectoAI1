@@ -1,0 +1,11 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro.md
+chapters:
+- file: strategy.py
+- file: AlphaBeta.txt
+- file: board.py
+- file: demo.ipynb
+- file: main.py
