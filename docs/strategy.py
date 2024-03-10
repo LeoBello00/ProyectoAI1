@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from numpy import random
-from board import Board
+from docs.board import Board
 from copy import deepcopy
 import concurrent.futures
 
